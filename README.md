@@ -22,8 +22,8 @@ Any feedback is welcome, and I will incorporate useful pull requests.
 # Running
 ## Run the Server
 The Server is started using the `org.apache.camel.spring.Main` class that can start application out-of-the-box. The Server can be started with:
-```mvn compile exec:java -Pserver```
+> ```mvn compile exec:java -Pserver```
 
 ## Run the Clients
 The Clients is started using their main class respectively.
-```mvn compile exec:java -Pclient```
+> ```mvn compile exec:java -Pclient```
