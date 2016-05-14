@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <!-- let Spring do its IoC stuff in this package -->
+    <context:annotation-config/>
+    <context:component-scan base-package="com.sample.apns.client"/>
+
+    <!-- bridge spring property placeholder with Camel -->
+    <!-- you must NOT use the <context:property-placeholder at the same time, only this bridge bean -->
+    <bean id="bridgePropertyPlaceholder" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:camel.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jacksonObjectMapper"/>
+        <property name="targetMethod" value="disable"/>
+        <property name="arguments">
+            <list>
+                <value type="com.fasterxml.jackson.databind.SerializationFeature">INDENT_OUTPUT</value>
+            </list>
+        </property>
+    </bean>
+
+    <camel:camelContext id="camel-client">
+        <camel:template id="camelTemplate"/>
+    </camel:camelContext>
+
+    <!-- Camel JMSProducer to be able to send messages to a remote Active MQ server -->
+    <bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="tcp://localhost:${tcp.port}"/>
+                <property name="trustAllPackages" value="true"/>
+            </bean>
+        </property>
+    </bean>
+</beans>
