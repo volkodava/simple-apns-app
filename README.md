@@ -9,6 +9,8 @@ Before start using application please update property file `simple-apns-app/src/
 
 **IMPORTANT:** Certificate password file is optional property. If path to password file provided it must contain one line text inside as your password or been empty.
 
+In order to request APNs certificate follow the documentation: [Creating a Universal Push Notification Client SSL Certificate](https://developer.apple.com/library/mac/documentation/IDEs/Conceptual/AppDistributionGuide/AddingCapabilities/AddingCapabilities.html#//apple_ref/doc/uid/TP40012582-CH26-SW11)
+
 # About
 
 Application aims to decouple APNs related code from the client code to simplify application testing
