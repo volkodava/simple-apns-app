@@ -9,7 +9,8 @@ public class Server extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        // the same as above but expressed as a URI configuration
+        // subscribed to the topic with the name, resolved from properties - {{topic.address}}
+        // deliver messages to the logger and spring bean
         from("{{topic.address}}").
                 to("log:com.sample.apns.server?level=INFO").
                 to("bean:apnsNotifier?method=push");
