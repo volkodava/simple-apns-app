@@ -33,7 +33,7 @@ public final class Client {
 
     public static void main(final String[] args) throws Exception {
         log.info("Notice this client requires that the Server is already running!");
-        log.info("Use: 'mvn exec:java -Pserver' to start the Server.");
+        log.info("Use: 'mvn compile exec:java -Pserver' to start the Server.");
 
         Map<String, Object> message = new HashMap<>();
         // hexadecimal bytes of the device token for the target device (device id)
