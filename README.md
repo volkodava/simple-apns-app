@@ -1,6 +1,6 @@
 # simple-apns-app
 
-Simple application which sends Apple Push Notification over JMS using Apache Camel, Spring IoC and Pushy.
+Simple application which sends Apple Push Notification over JMS using Apache Camel, Spring IoC and Pushy (`new Apple's HTTP/2-based APNs protocol`).
 Before start using application please update property file `simple-apns-app/src/main/resources/service.properties` respectively:
 
 > `pkcs12.cert.file=__PATH_TO_YOUR_PKCS12_CERTIFICATE_FILE__` - path to certificate file to communicate with APNs gateway.
