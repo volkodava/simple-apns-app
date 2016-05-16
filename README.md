@@ -43,5 +43,6 @@ The Server is started using the `org.apache.camel.spring.Main` class that can st
 
 The Clients is started using their main class respectively.
 > ```mvn compile exec:java -Pclient```
+
 or interactive version:
 > ```mvn compile exec:java -PcmdClient```
