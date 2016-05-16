@@ -22,6 +22,20 @@
         </property>
     </bean>
 
+    <bean id="configuration" class="com.sample.apns.common.Configuration">
+        <property name="serverPort" value="${tcp.port}"/>
+        <property name="topicAddress" value="${topic.address}"/>
+        <property name="dateTimeFormat" value="${datetime.format}"/>
+    </bean>
+
+    <bean id="payloadService" class="com.sample.apns.client.service.PayloadService">
+        <property name="mapper" ref="jacksonObjectMapper"/>
+    </bean>
+
+    <bean id="messageSender" class="com.sample.apns.client.service.MessageSender">
+        <property name="camelTemplate" ref="camelTemplate"/>
+    </bean>
+
     <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="jacksonObjectMapper"/>

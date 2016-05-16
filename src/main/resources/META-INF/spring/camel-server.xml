@@ -25,6 +25,12 @@
         </property>
     </bean>
 
+    <bean id="configuration" class="com.sample.apns.common.Configuration">
+        <property name="serverPort" value="${tcp.port}"/>
+        <property name="topicAddress" value="${topic.address}"/>
+        <property name="dateTimeFormat" value="${datetime.format}"/>
+    </bean>
+
     <!-- declare a camel context that scans for classes that is RouteBuilder in the package com.sample.apns.server -->
     <camel:camelContext id="camel-server">
         <camel:package>com.sample.apns.server</camel:package>

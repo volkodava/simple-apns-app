@@ -46,6 +46,13 @@
                 <target.main.class>com.sample.apns.client.Client</target.main.class>
             </properties>
         </profile>
+        <profile>
+            <id>cmdClient</id>
+            <properties>
+                <!-- run with: mvn compile exec:java -PcmdClient -->
+                <target.main.class>com.sample.apns.client.CmdClient</target.main.class>
+            </properties>
+        </profile>
     </profiles>
 
     <build>

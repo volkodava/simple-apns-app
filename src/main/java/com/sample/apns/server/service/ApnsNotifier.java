@@ -2,12 +2,16 @@ package com.sample.apns.server.service;
 
 import com.relayrides.pushy.apns.ApnsClient;
 import com.relayrides.pushy.apns.ClientNotConnectedException;
+import com.relayrides.pushy.apns.DeliveryPriority;
 import com.relayrides.pushy.apns.PushNotificationResponse;
 import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
+import com.sample.apns.common.Configuration;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 public class ApnsNotifier {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @Autowired
+    private Configuration configuration;
     @Value("${pkcs12.cert.file}")
     private Resource pkcs12Cert;
     @Value("${pkcs12.passwd.file}")
@@ -38,12 +45,18 @@ public class ApnsNotifier {
         String token = (String) params.get("token");
         String topic = (String) params.get("topic");
         String payload = (String) params.get("payload");
+        Date invalidationTime = configuration.convertStringToDate((String) params.get("invalidationTime"));
+        DeliveryPriority priority = DeliveryPriority.IMMEDIATE;
+        String priorityStr = (String) params.get("priority");
+        if (!StringUtils.isBlank(priorityStr)) {
+            priority = DeliveryPriority.valueOf(priorityStr);
+        }
 
         StringBuilder replyMessage = new StringBuilder();
-        replyMessage.append(String.format("Pushing:\ntoken:\t%s\ntopic:\t%s\npayload:\t%s", token, topic, payload));
+        replyMessage.append(String.format("Pushing:\n%s", params));
 
         SimpleApnsPushNotification pushNotification =
-                new SimpleApnsPushNotification(token, topic, payload);
+                new SimpleApnsPushNotification(token, topic, payload, invalidationTime, priority);
 
         try {
             PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse =
@@ -81,6 +94,7 @@ public class ApnsNotifier {
 
     @PostConstruct
     public void initialize() throws Exception {
+        Validate.notNull(configuration, "Configuration must not be null");
         Validate.notNull(pkcs12Cert, "Certificate file must not be null");
         Validate.isTrue(pkcs12Cert.exists(), "Certificate file must exists");
         Validate.isTrue(commandTimeout > 0, "Timeout must be any positive number");
